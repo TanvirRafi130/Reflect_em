@@ -37,9 +37,9 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Player>(out Player player))
+        if (collision.gameObject.TryGetComponent<IPlayer>(out IPlayer player))
         {
-            if (player.isShieldOn)
+            if (player.IsShieldOn)
             {
                 canHitSelfType = true;
                 var part = Instantiate(GameManager.Instance.playerCollidParticle);
@@ -64,13 +64,13 @@ public class Bullet : MonoBehaviour
             }
 
         }
-        if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy) && canHitSelfType)
+        if (collision.gameObject.TryGetComponent<IEnemy>(out IEnemy enemy) && canHitSelfType)
         {
             var part = Instantiate(GameManager.Instance.bulletHitParticle);
             part.transform.position = this.transform.position;
             part.Play();
             Destroy(part.gameObject, 1f);
-            enemy.Hurt(GameManager.Instance.currentWave.bulletDamage*5f, this.transform.position);
+            enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * 5f, this.transform.position);
             Destroy(this.gameObject);
         }
 

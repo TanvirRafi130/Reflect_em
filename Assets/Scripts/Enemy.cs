@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IEnemy
 {
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] public float moveSpeed = 3f;
@@ -55,9 +55,9 @@ public class Enemy : MonoBehaviour
             transform.DOScale(Vector2.one, 0.5f);
             // Move towards player
             Vector2 moveDirection = direction.normalized;
-            if (distanceToPlayer > 60f)
+            if (distanceToPlayer > 25f)
             {
-                rb.velocity = moveDirection * moveSpeed * 1000f;
+                rb.velocity = moveDirection * moveSpeed * 50;
             }
             else
             {
@@ -78,12 +78,17 @@ public class Enemy : MonoBehaviour
         {
             // Stop moving when close enough
             rb.velocity = Vector2.zero;
+        }
+        if (distanceToPlayer < stopDistance * 1.25f)
+        {
+
             if (!isShooting)
             {
                 StartShootAnimation();
             }
-
         }
+
+
     }
     bool isShooting = false;
     void StartShootAnimation()

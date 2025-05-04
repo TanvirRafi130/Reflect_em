@@ -1,11 +1,15 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using TMPro;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPlayer
 {
     private static Player instance;
     public static Player Instance => instance;
+
+    public bool IsShieldOn => isShieldOn;
+
     public float moveSpeed = 5f; // প্লেয়ারের গতি
     public Image healthBar;
     private Rigidbody2D rb;
@@ -20,6 +24,10 @@ public class Player : MonoBehaviour
     public float health;
     float maxHealth = 500;
     public float maxShieldTime = 5f;
+    public ParticleSystem shieldParticle;
+    public Image shieldBarImage;
+    public TextMeshProUGUI shieldBarSeconds;
+    float elapsedShieldTime;
 
 
     private void Awake()
@@ -34,11 +42,21 @@ public class Player : MonoBehaviour
         StartBreathing(); // শুরুতেই ব্রিদিং
         health = maxHealth;
         SetHealth();
+        elapsedShieldTime = maxShieldTime;
+        SetShieldTimer();
     }
 
     void SetHealth()
     {
         healthBar.fillAmount = health / maxHealth;
+    }
+
+    void SetShieldTimer()
+    {
+
+        elapsedShieldTime = Mathf.Min(elapsedShieldTime, maxShieldTime); // সর্বাধিক সময়ের চেয়ে বেশি হলে সেটিকে সর্বাধিক সময়ের সমান করুন
+        shieldBarSeconds.text = $"{elapsedShieldTime:F2} / {maxShieldTime:F2}"; // দুই দশমিক স্থানে রূপান্তর
+
     }
 
     // Update is called once per frame
@@ -49,13 +67,41 @@ public class Player : MonoBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
         movement = movement.normalized; // ডায়াগোনাল মুভমেন্টে গতি ঠিক রাখতে
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.L))
         {
-            isShieldOn = true;
+            if (elapsedShieldTime > 0)
+            {
+                isShieldOn = true;
+                elapsedShieldTime -= Time.deltaTime;
+                shieldBarImage.fillAmount = elapsedShieldTime / maxShieldTime;
+                SetShieldTimer();
+                if (!shieldParticle.isPlaying)
+                {
+                    shieldParticle.Play();
+                }
+            }
+            else
+            {
+                isShieldOn = false;
+                if (shieldParticle.isPlaying)
+                {
+                    shieldParticle.Stop();
+                }
+            }
         }
         else
         {
             isShieldOn = false;
+            if (elapsedShieldTime < maxShieldTime)
+            {
+                if (shieldParticle.isPlaying)
+                {
+                    shieldParticle.Stop();
+                }
+                elapsedShieldTime += Time.deltaTime * 0.5f; // শিল্ড রিচার্জ হবে আস্তে আস্তে
+                shieldBarImage.fillAmount = elapsedShieldTime / maxShieldTime;
+                SetShieldTimer();
+            }
         }
 
         // মুভিং চেক
@@ -87,6 +133,7 @@ public class Player : MonoBehaviour
     {
         // Rigidbody2D দিয়ে মুভমেন্ট
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        shieldParticle.gameObject.transform.position = transform.position;
     }
 
     void StartDirectionalSquish()

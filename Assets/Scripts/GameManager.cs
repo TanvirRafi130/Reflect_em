@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.UI;
+using DG.Tweening;
 
 [System.Serializable]
 public class Wave
@@ -39,10 +40,13 @@ public class GameManager : MonoBehaviour
     public ParticleSystem bulletHitParticle;
 
     public List<GameObject> EnemyPrefabs;
+    public Image waveBar;
+    public TextMeshProUGUI waveText;
 
     int killLeft;
 
     int waveNumber = 0;
+    int killsTotal = 0;
     public Wave currentWave;
 
     private void Awake()
@@ -56,12 +60,22 @@ public class GameManager : MonoBehaviour
         StartCoroutine(WaveManager());
     }
 
+    void SetWaveBar()
+    {
+        float e = (float)killsTotal / (float)currentWave.maxEnemy;
+        waveBar.DOFillAmount(e, 0.3f);
+        waveText.text = $"{currentWave.level + 1} / {waves.Count}";
+
+    }
+
     IEnumerator WaveManager()
     {
         while (waveNumber < waves.Count)
         {
             currentWave = waves[waveNumber];
             killLeft = currentWave.maxEnemy;
+            killsTotal = 0;
+            SetWaveBar();
 
             // Wait for wave interval
             yield return new WaitForSeconds(waveInterval);
@@ -111,6 +125,8 @@ public class GameManager : MonoBehaviour
 
     public void OnEnemyDeath(GameObject enemy)
     {
+        killsTotal++;
+        SetWaveBar();
         enemies.Remove(enemy);
     }
 }
