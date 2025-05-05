@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour, IEnemy
         Vector3 direction = Player.Instance.transform.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * 100f * Time.deltaTime);
 
         // Handle movement and animation
         float distanceToPlayer = direction.magnitude;
@@ -57,11 +57,11 @@ public class Enemy : MonoBehaviour, IEnemy
             Vector2 moveDirection = direction.normalized;
             if (distanceToPlayer > 25f)
             {
-                rb.velocity = moveDirection * moveSpeed * 50;
+                rb.linearVelocity = moveDirection * moveSpeed * 50;
             }
             else
             {
-                rb.velocity = moveDirection * moveSpeed;
+                rb.linearVelocity = moveDirection * moveSpeed;
 
 
             }
@@ -77,7 +77,7 @@ public class Enemy : MonoBehaviour, IEnemy
         else
         {
             // Stop moving when close enough
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
         if (distanceToPlayer < stopDistance * 1.25f)
         {
@@ -111,14 +111,26 @@ public class Enemy : MonoBehaviour, IEnemy
         health -= damage;
         var d = (transform.position - dir).normalized;
         transform.position += d * 0.3f;
+        WorldCanvas.Instance.ShowDamageText(this.transform.position, damage);
+
         SetHealth();
         if (health <= 0)
         {
-            Destroy(this.gameObject);
+            Finish();
+            transform.DOPunchScale(transform.localScale * Random.Range(1.1f, 1.5f), 0.1f, 2, 0.5f).SetEase(Ease.OutQuart)
+            .OnComplete(() =>
+            {
+                transform.DOScale(0, 0.1f).SetEase(Ease.Flash)
+                .OnComplete(() =>
+                {
+                    Destroy(this.gameObject);
+                })
+                ;
+            });
         }
     }
 
-    void OnDestroy()
+    void Finish()
     {
         GameManager.Instance.OnEnemyDeath(this.gameObject);
     }

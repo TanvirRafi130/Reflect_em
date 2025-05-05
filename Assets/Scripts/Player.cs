@@ -28,6 +28,9 @@ public class Player : MonoBehaviour, IPlayer
     public Image shieldBarImage;
     public TextMeshProUGUI shieldBarSeconds;
     float elapsedShieldTime;
+    public GameObject cam;
+    public Color damageBgCol;
+
 
 
     private void Awake()
@@ -37,6 +40,7 @@ public class Player : MonoBehaviour, IPlayer
     // Start is called before the first frame update
     void Start()
     {
+        originalEnvCol = cam.GetComponent<Camera>().backgroundColor;
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         StartBreathing(); // শুরুতেই ব্রিদিং
@@ -44,6 +48,7 @@ public class Player : MonoBehaviour, IPlayer
         SetHealth();
         elapsedShieldTime = maxShieldTime;
         SetShieldTimer();
+
     }
 
     void SetHealth()
@@ -201,15 +206,50 @@ public class Player : MonoBehaviour, IPlayer
         teleportSeq.Append(transform.DOScale(Vector3.one, 0.12f).SetEase(Ease.OutBack)); // bounce back
         teleportSeq.OnStart(() => { if (spriteRenderer != null) spriteRenderer.enabled = true; });
     }
+
+    void ShakeCamera()
+    {
+        var bg = cam.GetComponent<Camera>();
+        bg.backgroundColor = damageBgCol;
+        cam.transform.DOShakePosition(0.1f, 1f, 10, 90, false, true)
+        .OnComplete(() =>
+        {
+            cam.transform.localPosition = Vector3.zero;
+        })
+        ;
+        DOVirtual.DelayedCall(0.02f, () =>
+        {
+            bg.backgroundColor = originalEnvCol;
+        });
+    }
+    Color originalEnvCol;
     public void Hurt(float damage, Vector3 dir)
     {
         health -= damage;
         var d = (transform.position - dir).normalized;
         transform.position += d * 0.3f;
         SetHealth();
+        ShakeCamera(); // ক্যামেরা শেক যোগ করা হয়েছে
+        WorldCanvas.Instance.ShowDamageText(this.transform.position, damage);
         if (health <= 0)
         {
-            Destroy(this.gameObject);
+            transform.DOPunchScale(transform.localScale * Random.Range(1.1f, 1.5f), 0.1f, 2, 0.5f).SetEase(Ease.OutQuart)
+             .OnComplete(() =>
+             {
+                 transform.DOShakePosition(0.5f, 0.4f, 5, 90, false, true, ShakeRandomnessMode.Full)
+                 .OnComplete(() =>
+                 {
+                     transform.DOScale(0, 0.1f).SetEase(Ease.Flash)
+                                   .OnComplete(() =>
+                                   {
+                                       Destroy(this.gameObject);
+                                   })
+                                   ;
+
+                 })
+                 ;
+
+             });
         }
     }
 

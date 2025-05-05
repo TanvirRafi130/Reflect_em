@@ -25,7 +25,7 @@ public class Bullet : MonoBehaviour
         trailRenderer.endColor = new Color(randomColor.r, randomColor.g, randomColor.b, 0f);
 
         // Shoot the bullet in the specified direction with given speed
-        rigidbody2D.velocity = dir.normalized * GameManager.Instance.bulletShootSpeed;
+        rigidbody2D.linearVelocity = dir.normalized * GameManager.Instance.bulletShootSpeed;
         // Destroy(this, 50f);
     }
 
@@ -49,7 +49,7 @@ public class Bullet : MonoBehaviour
                 // Get the current velocity direction
                 // Reflect the direction
                 Vector2 reflectedDirection = transform.position - Player.Instance.transform.position;
-                rigidbody2D.velocity = reflectedDirection.normalized * GameManager.Instance.bulletShootSpeed;
+                rigidbody2D.linearVelocity = reflectedDirection.normalized * GameManager.Instance.bulletShootSpeed;
 
             }
             else
