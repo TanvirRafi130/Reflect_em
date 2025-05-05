@@ -2903,13 +2903,85 @@ MonoBehaviour:
   waveInterval: 2
   waves:
   - level: 0
-    maxEnemy: 5
+    maxEnemy: 10
     maxENemiesAtATime: 2
-    bulletDamage: 5
-    enemyMoveSpeed: 4
+    bulletDamage: 1
+    enemyMoveSpeed: 5
     enemyStopDist: 7
-    shootInterval: 2
-    enemyMaxHealth: 30
+    shootInterval: 1.5
+    enemyMaxHealth: 50
+  - level: 1
+    maxEnemy: 20
+    maxENemiesAtATime: 7
+    bulletDamage: 2
+    enemyMoveSpeed: 6
+    enemyStopDist: 6
+    shootInterval: 1.3
+    enemyMaxHealth: 70
+  - level: 2
+    maxEnemy: 30
+    maxENemiesAtATime: 10
+    bulletDamage: 5
+    enemyMoveSpeed: 7
+    enemyStopDist: 5
+    shootInterval: 1.2
+    enemyMaxHealth: 100
+  - level: 3
+    maxEnemy: 50
+    maxENemiesAtATime: 15
+    bulletDamage: 7
+    enemyMoveSpeed: 8
+    enemyStopDist: 4.7
+    shootInterval: 1.1
+    enemyMaxHealth: 150
+  - level: 4
+    maxEnemy: 70
+    maxENemiesAtATime: 17
+    bulletDamage: 10
+    enemyMoveSpeed: 9
+    enemyStopDist: 4.3
+    shootInterval: 1
+    enemyMaxHealth: 170
+  - level: 5
+    maxEnemy: 80
+    maxENemiesAtATime: 20
+    bulletDamage: 11
+    enemyMoveSpeed: 10
+    enemyStopDist: 4.1
+    shootInterval: 0.95
+    enemyMaxHealth: 300
+  - level: 6
+    maxEnemy: 90
+    maxENemiesAtATime: 23
+    bulletDamage: 12.5
+    enemyMoveSpeed: 11
+    enemyStopDist: 3.9
+    shootInterval: 0.9
+    enemyMaxHealth: 500
+  - level: 7
+    maxEnemy: 100
+    maxENemiesAtATime: 25
+    bulletDamage: 14
+    enemyMoveSpeed: 12
+    enemyStopDist: 3.6
+    shootInterval: 0.86
+    enemyMaxHealth: 700
+  - level: 8
+    maxEnemy: 150
+    maxENemiesAtATime: 27
+    bulletDamage: 16
+    enemyMoveSpeed: 13
+    enemyStopDist: 3
+    shootInterval: 0.8
+    enemyMaxHealth: 800
+  - level: 9
+    maxEnemy: 200
+    maxENemiesAtATime: 30
+    bulletDamage: 20
+    enemyMoveSpeed: 14
+    enemyStopDist: 2
+    shootInterval: 0.7
+    enemyMaxHealth: 1000
   spawnPositionsParent: {fileID: 2059009830}
   telePortParticle: {fileID: 141433446842962268, guid: 9fe8f8b3288e45a44af36ff8aa04486e, type: 3}
   playerCollidParticle: {fileID: 1429954232896169632, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}
