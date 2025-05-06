@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
 
         // Shoot the bullet in the specified direction with given speed
         rigidbody2D.linearVelocity = dir.normalized * GameManager.Instance.bulletShootSpeed;
-        // Destroy(this, 50f);
+         Destroy(this.gameObject, 2.5f);
     }
 
     // Update is called once per frame

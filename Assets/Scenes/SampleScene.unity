@@ -1340,7 +1340,7 @@ MonoBehaviour:
   teleportHideTime: 0.08
   isShieldOn: 0
   health: 100
-  maxShieldTime: 5
+  maxShieldTime: 1000000
   shieldParticle: {fileID: 1662751279}
   shieldBarImage: {fileID: 1082506110}
   shieldBarSeconds: {fileID: 1252047954}
@@ -3068,6 +3068,7 @@ MonoBehaviour:
   waveInterval: 2
   waves:
   - level: 0
+    enemyTypeToSpawn: 0
     maxEnemy: 10
     maxENemiesAtATime: 10
     bulletDamage: 1
@@ -3076,6 +3077,7 @@ MonoBehaviour:
     shootInterval: 1.5
     enemyMaxHealth: 10
   - level: 1
+    enemyTypeToSpawn: 0
     maxEnemy: 20
     maxENemiesAtATime: 7
     bulletDamage: 2
@@ -3084,6 +3086,7 @@ MonoBehaviour:
     shootInterval: 1.3
     enemyMaxHealth: 70
   - level: 2
+    enemyTypeToSpawn: 0
     maxEnemy: 30
     maxENemiesAtATime: 10
     bulletDamage: 5
@@ -3092,6 +3095,7 @@ MonoBehaviour:
     shootInterval: 1.2
     enemyMaxHealth: 100
   - level: 3
+    enemyTypeToSpawn: 1
     maxEnemy: 50
     maxENemiesAtATime: 15
     bulletDamage: 7
@@ -3100,6 +3104,7 @@ MonoBehaviour:
     shootInterval: 1.1
     enemyMaxHealth: 150
   - level: 4
+    enemyTypeToSpawn: 1
     maxEnemy: 70
     maxENemiesAtATime: 17
     bulletDamage: 10
@@ -3108,6 +3113,7 @@ MonoBehaviour:
     shootInterval: 1
     enemyMaxHealth: 170
   - level: 5
+    enemyTypeToSpawn: 1
     maxEnemy: 80
     maxENemiesAtATime: 20
     bulletDamage: 11
@@ -3116,6 +3122,7 @@ MonoBehaviour:
     shootInterval: 0.95
     enemyMaxHealth: 300
   - level: 6
+    enemyTypeToSpawn: 2
     maxEnemy: 90
     maxENemiesAtATime: 23
     bulletDamage: 12.5
@@ -3124,6 +3131,7 @@ MonoBehaviour:
     shootInterval: 0.9
     enemyMaxHealth: 500
   - level: 7
+    enemyTypeToSpawn: 2
     maxEnemy: 100
     maxENemiesAtATime: 25
     bulletDamage: 14
@@ -3132,6 +3140,7 @@ MonoBehaviour:
     shootInterval: 0.86
     enemyMaxHealth: 700
   - level: 8
+    enemyTypeToSpawn: 2
     maxEnemy: 150
     maxENemiesAtATime: 27
     bulletDamage: 16
@@ -3140,6 +3149,7 @@ MonoBehaviour:
     shootInterval: 0.8
     enemyMaxHealth: 800
   - level: 9
+    enemyTypeToSpawn: 2
     maxEnemy: 200
     maxENemiesAtATime: 30
     bulletDamage: 20
@@ -3152,15 +3162,37 @@ MonoBehaviour:
   playerCollidParticle: {fileID: 1429954232896169632, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}
   bulletHitParticle: {fileID: 4553287630450876387, guid: 15483e51212e3d74886ea57291f4639a, type: 3}
   EnemyPrefabs:
-  - {fileID: 2857100507130528326, guid: e35d3dfeb8c45974dad0d838c1f12dcc, type: 3}
-  - {fileID: 882969599561541671, guid: 87591d42d6e05f44ca6222ff56e1d085, type: 3}
-  - {fileID: 3026487793858918923, guid: cf80c4bcfa39866448e4c19471d0ba42, type: 3}
-  - {fileID: 2565222230632441903, guid: 6c90a36dfc151174788079b25413e7dd, type: 3}
-  - {fileID: 4721825707209455232, guid: 5a803903da5f73843a5ad44af5e814de, type: 3}
+  - enemyType: 0
+    prefabs:
+    - {fileID: 4721825707209455232, guid: 5a803903da5f73843a5ad44af5e814de, type: 3}
+    - {fileID: 2857100507130528326, guid: e35d3dfeb8c45974dad0d838c1f12dcc, type: 3}
+    - {fileID: 882969599561541671, guid: 87591d42d6e05f44ca6222ff56e1d085, type: 3}
+    - {fileID: 3026487793858918923, guid: cf80c4bcfa39866448e4c19471d0ba42, type: 3}
+    - {fileID: 2565222230632441903, guid: 6c90a36dfc151174788079b25413e7dd, type: 3}
+  - enemyType: 1
+    prefabs:
+    - {fileID: 882969599561541671, guid: d29d66b717e337c488f5870fa2f048db, type: 3}
+    - {fileID: 3026487793858918923, guid: 0e74a9abcc04d2b44a80a2e7d8a202b1, type: 3}
+    - {fileID: 2857100507130528326, guid: b67a6839d4a0e844db7fa7d3273e4bbb, type: 3}
+    - {fileID: 4721825707209455232, guid: d21361b86f93f954297e1f57d08e71dc, type: 3}
+  - enemyType: 2
+    prefabs:
+    - {fileID: 882969599561541671, guid: 671b60d039790be4e9c3bac82681df30, type: 3}
+    - {fileID: 2857100507130528326, guid: f1e0640941504a748a7cb159581dbe53, type: 3}
+    - {fileID: 4721825707209455232, guid: 5a803903da5f73843a5ad44af5e814de, type: 3}
+    - {fileID: 2857100507130528326, guid: e35d3dfeb8c45974dad0d838c1f12dcc, type: 3}
+    - {fileID: 882969599561541671, guid: 87591d42d6e05f44ca6222ff56e1d085, type: 3}
+    - {fileID: 3026487793858918923, guid: cf80c4bcfa39866448e4c19471d0ba42, type: 3}
+    - {fileID: 2565222230632441903, guid: 6c90a36dfc151174788079b25413e7dd, type: 3}
+    - {fileID: 882969599561541671, guid: d29d66b717e337c488f5870fa2f048db, type: 3}
+    - {fileID: 3026487793858918923, guid: 0e74a9abcc04d2b44a80a2e7d8a202b1, type: 3}
+    - {fileID: 2857100507130528326, guid: b67a6839d4a0e844db7fa7d3273e4bbb, type: 3}
+    - {fileID: 4721825707209455232, guid: d21361b86f93f954297e1f57d08e71dc, type: 3}
   waveBar: {fileID: 104585426}
   waveText: {fileID: 353759104}
   currentWave:
     level: 0
+    enemyTypeToSpawn: 0
     maxEnemy: 0
     maxENemiesAtATime: 0
     bulletDamage: 0

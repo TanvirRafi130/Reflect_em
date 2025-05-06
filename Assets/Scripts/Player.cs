@@ -30,6 +30,7 @@ public class Player : MonoBehaviour, IPlayer
     float elapsedShieldTime;
     public GameObject cam;
     public Color damageBgCol;
+    private BoxCollider2D boxCollider;
 
 
 
@@ -43,6 +44,7 @@ public class Player : MonoBehaviour, IPlayer
         originalEnvCol = cam.GetComponent<Camera>().backgroundColor;
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider2D>();
         StartBreathing(); // শুরুতেই ব্রিদিং
         health = maxHealth;
         SetHealth();
@@ -197,10 +199,14 @@ public class Player : MonoBehaviour, IPlayer
         teleportSeq.Join(spriteRenderer.DOFade(0f, 0.07f)); // fade out
         teleportSeq.AppendCallback(() =>
         {
+            boxCollider.enabled = false;
             // টার্গেট পজিশনে টেলিপোর্ট
             rb.position = rb.position + movement * teleportDistance;
         });
-        teleportSeq.AppendInterval(teleportHideTime * 0.5f); // অল্প সময় অদৃশ্য
+        teleportSeq.AppendInterval(teleportHideTime * 0.5f); // অল্প সময় অদৃশ্য
+        teleportSeq.AppendCallback(() => {
+            boxCollider.enabled = true;
+        });
         teleportSeq.Append(spriteRenderer.DOFade(1f, 0.09f)); // fade in
         teleportSeq.Join(transform.DOScale(new Vector3(1.2f, 1.3f, 1f), 0.09f)); // bounce overshoot
         teleportSeq.Append(transform.DOScale(Vector3.one, 0.12f).SetEase(Ease.OutBack)); // bounce back
@@ -257,15 +263,44 @@ public class Player : MonoBehaviour, IPlayer
     {
         if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
         {
-            var part = Instantiate(GameManager.Instance.playerCollidParticle);
-            part.transform.position = this.transform.position;
-            part.Play();
-            Destroy(part.gameObject, 2f);
-            var d = (transform.position - enemy.transform.position).normalized;
-            transform.position += d * 0.8f;
-            ShakeEffect();
-            health -= 10f;
-            SetHealth();
+            if (!isShieldOn)
+            {
+                var part = Instantiate(GameManager.Instance.playerCollidParticle);
+                part.transform.position = this.transform.position;
+                part.Play();
+                Destroy(part.gameObject, 2f);
+                var d = (transform.position - enemy.transform.position).normalized;
+                transform.position += d * 0.8f;
+                ShakeEffect();
+                health -= 10f;
+                SetHealth();
+            }
+            else
+            {
+                enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * 5f, this.transform.position);
+            }
+        }
+    }
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+        {
+            if (!isShieldOn)
+            {
+                var part = Instantiate(GameManager.Instance.playerCollidParticle);
+                part.transform.position = this.transform.position;
+                part.Play();
+                Destroy(part.gameObject, 2f);
+                var d = (transform.position - enemy.transform.position).normalized;
+                transform.position += d * 0.8f;
+                ShakeEffect();
+                health -= 10f;
+                SetHealth();
+            }
+            else
+            {
+                enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * 5f, this.transform.position);
+            }
         }
     }
 

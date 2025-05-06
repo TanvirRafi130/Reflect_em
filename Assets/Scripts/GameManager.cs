@@ -4,11 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 [System.Serializable]
 public class Wave
 {
     public int level = 0;
+    public EnemyType enemyTypeToSpawn;
     public int maxEnemy;
     public int maxENemiesAtATime;
     public float bulletDamage;
@@ -18,6 +20,12 @@ public class Wave
     public float enemyMaxHealth;
 }
 
+[System.Serializable]
+public class EnemyPrefabs
+{
+    public EnemyType enemyType;
+    public List<GameObject> prefabs;
+}
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
@@ -39,7 +47,7 @@ public class GameManager : MonoBehaviour
     public ParticleSystem playerCollidParticle;
     public ParticleSystem bulletHitParticle;
 
-    public List<GameObject> EnemyPrefabs;
+    public List<EnemyPrefabs> EnemyPrefabs;
     public Image waveBar;
     public TextMeshProUGUI waveText;
 
@@ -88,22 +96,24 @@ public class GameManager : MonoBehaviour
                 {
                     // Find a random spawn position
                     Transform spawnPos = spawnPositionsParent.GetChild(Random.Range(0, spawnPositionsParent.childCount));
-
-                    // Spawn enemy
-                    GameObject enemy = Instantiate(EnemyPrefabs[Random.Range(0, EnemyPrefabs.Count - 1)], spawnPos.position, Quaternion.identity);
-                    enemies.Add(enemy);
-
-                    // Setup enemy properties based on wave
-                    Enemy enemyScript = enemy.GetComponent<Enemy>();
-                    if (enemyScript != null)
+                    var itemList = EnemyPrefabs.Where(x => x.enemyType.Equals(currentWave.enemyTypeToSpawn)).FirstOrDefault();
+                    if (itemList != null && itemList.prefabs.Count > 0)
                     {
-                        enemyScript.moveSpeed = currentWave.enemyMoveSpeed;
-                        enemyScript.stopDistance = currentWave.enemyStopDist;
-                        enemyScript.shootInterval = currentWave.shootInterval;
-                        enemyScript.maxHealth = currentWave.enemyMaxHealth;
-                    }
+                        GameObject enemy = Instantiate(itemList.prefabs[Random.Range(0, itemList.prefabs.Count)], spawnPos.position, Quaternion.identity);
+                        enemies.Add(enemy);
 
-                    killLeft--;
+                        // Setup enemy properties based on wave
+                        Enemy enemyScript = enemy.GetComponent<Enemy>();
+                        if (enemyScript != null)
+                        {
+                            enemyScript.moveSpeed = currentWave.enemyMoveSpeed;
+                            enemyScript.stopDistance = currentWave.enemyStopDist;
+                            enemyScript.shootInterval = currentWave.shootInterval;
+                            enemyScript.maxHealth = currentWave.enemyMaxHealth;
+                        }
+
+                        killLeft--;
+                    }
                 }
 
                 // Wait before next spawn
