@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
+using NaughtyAttributes;
 
 [System.Serializable]
 public class Wave
@@ -18,6 +19,8 @@ public class Wave
     public float enemyStopDist;
     public float shootInterval;
     public float enemyMaxHealth;
+    public bool isBossFight;
+    [ShowIf("isBossFight"), AllowNesting] public GameObject bossPrefab;
 }
 
 [System.Serializable]
@@ -46,6 +49,7 @@ public class GameManager : MonoBehaviour
     public ParticleSystem telePortParticle;
     public ParticleSystem playerCollidParticle;
     public ParticleSystem bulletHitParticle;
+    public List<ParticleSystem> destructionParticles;
 
     public List<EnemyPrefabs> EnemyPrefabs;
     public Image waveBar;
@@ -68,14 +72,39 @@ public class GameManager : MonoBehaviour
         StartCoroutine(WaveManager());
     }
 
-    void SetWaveBar()
+
+    Sequence bossWaveTextSeq = DOTween.Sequence();
+    void SetWaveBar(bool isBossLevelText = false)
     {
         float e = (float)killsTotal / (float)currentWave.maxEnemy;
         waveBar.DOFillAmount(e, 0.3f);
-        waveText.text = $"{currentWave.level + 1} / {waves.Count}";
+        if (!isBossLevelText)
+        {
+            if (bossWaveTextSeq != null)
+            {
+                bossWaveTextSeq.Kill();
+                waveText.gameObject.transform.localScale = Vector3.one;
+            }
+            waveText.text = $"WAVE {currentWave.level + 1} - {waves.Count}";
+        }
+        else
+        {
+            waveText.text = $"BOSS";
+            SetWaveTextFieldAnimation();
+
+        }
 
     }
 
+    void SetWaveTextFieldAnimation()
+    {
+        if (bossWaveTextSeq != null) bossWaveTextSeq.Kill();
+        
+        bossWaveTextSeq = DOTween.Sequence()
+            .Append(waveText.gameObject.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f).SetEase(Ease.OutQuad))
+            .Append(waveText.gameObject.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InQuad))
+            .SetLoops(-1); // Infinite loop
+    }
     IEnumerator WaveManager()
     {
         while (waveNumber < waves.Count)
@@ -83,41 +112,81 @@ public class GameManager : MonoBehaviour
             currentWave = waves[waveNumber];
             killLeft = currentWave.maxEnemy;
             killsTotal = 0;
-            SetWaveBar();
+            SetWaveBar(currentWave.isBossFight ? true : false);
 
             // Wait for wave interval
             yield return new WaitForSeconds(waveInterval);
 
-            // Spawn enemies for current wave
-            while (killLeft > 0)
+            if (!currentWave.isBossFight)
             {
-                // Check if we can spawn more enemies
-                if (enemies.Count < currentWave.maxENemiesAtATime)
+                // Spawn enemies for current wave
+                while (killLeft > 0)
                 {
-                    // Find a random spawn position
-                    Transform spawnPos = spawnPositionsParent.GetChild(Random.Range(0, spawnPositionsParent.childCount));
-                    var itemList = EnemyPrefabs.Where(x => x.enemyType.Equals(currentWave.enemyTypeToSpawn)).FirstOrDefault();
-                    if (itemList != null && itemList.prefabs.Count > 0)
+                    // Check if we can spawn more enemies
+                    if (enemies.Count < currentWave.maxENemiesAtATime)
                     {
-                        GameObject enemy = Instantiate(itemList.prefabs[Random.Range(0, itemList.prefabs.Count)], spawnPos.position, Quaternion.identity);
-                        enemies.Add(enemy);
-
-                        // Setup enemy properties based on wave
-                        Enemy enemyScript = enemy.GetComponent<Enemy>();
-                        if (enemyScript != null)
+                        // Find a random spawn position
+                        Transform spawnPos = spawnPositionsParent.GetChild(Random.Range(0, spawnPositionsParent.childCount));
+                        var itemList = EnemyPrefabs.Where(x => x.enemyType.Equals(currentWave.enemyTypeToSpawn)).FirstOrDefault();
+                        if (itemList != null && itemList.prefabs.Count > 0)
                         {
-                            enemyScript.moveSpeed = currentWave.enemyMoveSpeed;
-                            enemyScript.stopDistance = currentWave.enemyStopDist;
-                            enemyScript.shootInterval = currentWave.shootInterval;
-                            enemyScript.maxHealth = currentWave.enemyMaxHealth;
-                        }
+                            GameObject enemy = Instantiate(itemList.prefabs[Random.Range(0, itemList.prefabs.Count)], spawnPos.position, Quaternion.identity);
+                            enemies.Add(enemy);
 
-                        killLeft--;
+                            // Setup enemy properties based on wave
+                            IEnemy enemyScript = enemy.GetComponent<IEnemy>();
+                            if (enemyScript != null)
+                            {
+                                enemyScript.SetMaxHealth(currentWave.enemyMaxHealth);
+                                enemyScript.SetMoveSpeed(currentWave.enemyMoveSpeed);
+                                enemyScript.SetShootInterval(currentWave.shootInterval);
+                                enemyScript.SetStopDistance(currentWave.enemyStopDist);
+
+                            }
+
+                            killLeft--;
+                        }
                     }
+
+                    // Wait before next spawn
+                    yield return new WaitForSeconds(1f);
+                }
+            }
+            else //boss fights
+            {
+                // Spawn enemies for current wave
+                while (killLeft > 0)
+                {
+                    // Check if we can spawn more enemies
+                    if (enemies.Count < currentWave.maxENemiesAtATime)
+                    {
+                        // Find a random spawn position
+                        Transform spawnPos = spawnPositionsParent.GetChild(Random.Range(0, spawnPositionsParent.childCount));
+                        //var itemList = EnemyPrefabs.Where(x => x.enemyType.Equals(currentWave.enemyTypeToSpawn)).FirstOrDefault();
+                        if (currentWave.bossPrefab != null)
+                        {
+                            GameObject enemy = Instantiate(currentWave.bossPrefab, spawnPos.position, Quaternion.identity);
+                            enemies.Add(enemy);
+
+                            // Setup enemy properties based on wave
+                            IEnemy enemyScript = enemy.GetComponent<IEnemy>();
+                            if (enemyScript != null)
+                            {
+                                enemyScript.SetMaxHealth(currentWave.enemyMaxHealth);
+                                enemyScript.SetMoveSpeed(currentWave.enemyMoveSpeed);
+                                enemyScript.SetShootInterval(currentWave.shootInterval);
+                                enemyScript.SetStopDistance(currentWave.enemyStopDist);
+
+                            }
+
+                            killLeft--;
+                        }
+                    }
+
+                    // Wait before next spawn
+                    yield return new WaitForSeconds(1f);
                 }
 
-                // Wait before next spawn
-                yield return new WaitForSeconds(1f);
             }
 
             // Wait until all enemies are dead
@@ -136,7 +205,7 @@ public class GameManager : MonoBehaviour
     public void OnEnemyDeath(GameObject enemy)
     {
         killsTotal++;
-        SetWaveBar();
+        SetWaveBar(currentWave.isBossFight ? true : false);
         enemies.Remove(enemy);
     }
 }

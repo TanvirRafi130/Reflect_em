@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6111194350697512628}
   - component: {fileID: 308860073717055300}
+  - component: {fileID: 8158179158876006246}
   m_Layer: 0
   m_Name: ShootPlace (5)
   m_TagString: Untagged
@@ -87,6 +88,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8158179158876006246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159205022339602203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c8ad8479544e640b5881136c68fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isAnimated: 0
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 0, y: 0, z: 0}
+  duration: 2
+  easeType: 7
+  bulletType: 2
 --- !u!1 &754489538765181359
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,6 +116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1987871908932358940}
   - component: {fileID: 5166780377642562448}
+  - component: {fileID: 5708445774217850905}
   m_Layer: 0
   m_Name: ShootPlace
   m_TagString: Untagged
@@ -174,6 +194,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5708445774217850905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754489538765181359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c8ad8479544e640b5881136c68fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isAnimated: 0
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 0, y: 0, z: 0}
+  duration: 2
+  easeType: 7
+  bulletType: 2
 --- !u!1 &2888918291775456440
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,6 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8212936513375731598}
   - component: {fileID: 2406037431339705499}
+  - component: {fileID: 955784231749668574}
   m_Layer: 0
   m_Name: ShootPlace (1)
   m_TagString: Untagged
@@ -261,6 +300,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &955784231749668574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2888918291775456440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c8ad8479544e640b5881136c68fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isAnimated: 0
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 0, y: 0, z: 0}
+  duration: 2
+  easeType: 7
+  bulletType: 2
 --- !u!1 &3026487793858918923
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +590,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6813661791522022298}
   - component: {fileID: 8907190324144194265}
+  - component: {fileID: 5991517152711082526}
   m_Layer: 0
   m_Name: ShootPlace (2)
   m_TagString: Untagged
@@ -610,6 +668,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5991517152711082526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4605329064366710898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c8ad8479544e640b5881136c68fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isAnimated: 0
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 0, y: 0, z: 0}
+  duration: 2
+  easeType: 7
+  bulletType: 2
 --- !u!1 &4755693453637036427
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,6 +696,7 @@ GameObject:
   m_Component:
   - component: {fileID: 821352813254640959}
   - component: {fileID: 1216804282199242090}
+  - component: {fileID: 3591454297289354621}
   m_Layer: 0
   m_Name: ShootPlace (4)
   m_TagString: Untagged
@@ -697,6 +774,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3591454297289354621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755693453637036427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c8ad8479544e640b5881136c68fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isAnimated: 0
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 0, y: 0, z: 0}
+  duration: 2
+  easeType: 7
+  bulletType: 2
 --- !u!1 &6367908197965880864
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,6 +904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9078742407545240588}
   - component: {fileID: 5204690431565350837}
+  - component: {fileID: 5951375537333039418}
   m_Layer: 0
   m_Name: ShootPlace (3)
   m_TagString: Untagged
@@ -886,6 +982,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5951375537333039418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6604600471950832231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c8ad8479544e640b5881136c68fa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isAnimated: 0
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 0, y: 0, z: 0}
+  duration: 2
+  easeType: 7
+  bulletType: 2
 --- !u!1 &7664073782143843383
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,18 +4,10 @@ using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-public enum EnemyType
-{
-    OneWayShoot = 0,
-    circular = 1,
-    shootPosMove = 2
-
-}
-public class Enemy : MonoBehaviour, IEnemy
+public class Enemy_Boss_1 : MonoBehaviour, IEnemy
 {
 
 
-    [SerializeField] private EnemyType enemyType;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] public float moveSpeed = 3f;
     [SerializeField] public float stopDistance = 2f;
@@ -28,7 +20,6 @@ public class Enemy : MonoBehaviour, IEnemy
     Color myColor;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
-    bool alwaysLookAtPlayer = true;
 
     // Start is called before the first frame update
     void Start()
@@ -40,17 +31,16 @@ public class Enemy : MonoBehaviour, IEnemy
         myBullet = GameManager.Instance.bullets[Random.Range(0, GameManager.Instance.bullets.Count - 1)];
         myColor = GameManager.Instance.colors[Random.Range(0, GameManager.Instance.colors.Count - 1)];
 
-        if (enemyType == EnemyType.circular || enemyType == EnemyType.shootPosMove)
-        {
-            alwaysLookAtPlayer = false;
-            transform.DORotate(new Vector3(0f, 0f, 360f), 0.8f, RotateMode.FastBeyond360)
-                .SetLoops(-1, LoopType.Restart)
-                .SetEase(Ease.Linear);
-        }
+
+
+        transform.DORotate(new Vector3(0f, 0f, 360f), 0.8f, RotateMode.FastBeyond360)
+            .SetLoops(-1, LoopType.Restart)
+            .SetEase(Ease.Linear);
+
     }
     void SetHealth()
     {
-        healthBar.DOFillAmount(health / maxHealth, 0.2f);
+        healthBar.fillAmount = health / maxHealth;
     }
 
 
@@ -61,10 +51,9 @@ public class Enemy : MonoBehaviour, IEnemy
         Vector3 direction = Player.Instance.transform.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-        if (alwaysLookAtPlayer)
-        {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * 100f * Time.deltaTime);
-        }
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * 100f * Time.deltaTime);
+
         // Handle movement and animation
         float distanceToPlayer = direction.magnitude;
 
@@ -114,7 +103,7 @@ public class Enemy : MonoBehaviour, IEnemy
     {
         if (isShooting) return;
         isShooting = true;
-        switch (enemyType)
+    /*     switch (enemyType)
         {
             case EnemyType.OneWayShoot:
                 var bullet = Instantiate(myBullet);
@@ -145,7 +134,7 @@ public class Enemy : MonoBehaviour, IEnemy
 
 
 
-        }
+        } */
 
 
 
@@ -170,10 +159,6 @@ public class Enemy : MonoBehaviour, IEnemy
                 transform.DOScale(0, 0.1f).SetEase(Ease.Flash)
                 .OnComplete(() =>
                 {
-                    var part = Instantiate(GameManager.Instance.destructionParticles[Random.Range(0, GameManager.Instance.destructionParticles.Count - 1)]);
-                    part.transform.position = this.transform.position;
-                    part.Play();
-                    Destroy(part.gameObject, 5f);
                     Destroy(this.gameObject);
                 })
                 ;
@@ -193,16 +178,16 @@ public class Enemy : MonoBehaviour, IEnemy
 
     public void SetStopDistance(float distance)
     {
-        stopDistance = distance;
+        throw new System.NotImplementedException();
     }
 
     public void SetShootInterval(float interval)
     {
-        shootInterval = interval;
+        throw new System.NotImplementedException();
     }
 
     public void SetMoveSpeed(float speed)
     {
-        moveSpeed = speed;
+        throw new System.NotImplementedException();
     }
 }

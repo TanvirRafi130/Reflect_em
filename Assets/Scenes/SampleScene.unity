@@ -571,8 +571,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: wave 1 / 10
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
+  m_sharedMaterial: {fileID: 6584673133508730501, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -596,8 +596,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2455,8 +2455,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 10
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
+  m_sharedMaterial: {fileID: 6584673133508730501, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3076,6 +3076,8 @@ MonoBehaviour:
     enemyStopDist: 7
     shootInterval: 1.5
     enemyMaxHealth: 10
+    isBossFight: 0
+    bossPrefab: {fileID: 2857100507130528326, guid: f1e0640941504a748a7cb159581dbe53, type: 3}
   - level: 1
     enemyTypeToSpawn: 0
     maxEnemy: 20
@@ -3085,6 +3087,8 @@ MonoBehaviour:
     enemyStopDist: 6
     shootInterval: 1.3
     enemyMaxHealth: 70
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 2
     enemyTypeToSpawn: 0
     maxEnemy: 30
@@ -3094,6 +3098,8 @@ MonoBehaviour:
     enemyStopDist: 5
     shootInterval: 1.2
     enemyMaxHealth: 100
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 3
     enemyTypeToSpawn: 1
     maxEnemy: 50
@@ -3103,6 +3109,8 @@ MonoBehaviour:
     enemyStopDist: 4.7
     shootInterval: 1.1
     enemyMaxHealth: 150
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 4
     enemyTypeToSpawn: 1
     maxEnemy: 70
@@ -3112,6 +3120,8 @@ MonoBehaviour:
     enemyStopDist: 4.3
     shootInterval: 1
     enemyMaxHealth: 170
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 5
     enemyTypeToSpawn: 1
     maxEnemy: 80
@@ -3121,6 +3131,8 @@ MonoBehaviour:
     enemyStopDist: 4.1
     shootInterval: 0.95
     enemyMaxHealth: 300
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 6
     enemyTypeToSpawn: 2
     maxEnemy: 90
@@ -3130,6 +3142,8 @@ MonoBehaviour:
     enemyStopDist: 3.9
     shootInterval: 0.9
     enemyMaxHealth: 500
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 7
     enemyTypeToSpawn: 2
     maxEnemy: 100
@@ -3139,6 +3153,8 @@ MonoBehaviour:
     enemyStopDist: 3.6
     shootInterval: 0.86
     enemyMaxHealth: 700
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 8
     enemyTypeToSpawn: 2
     maxEnemy: 150
@@ -3148,6 +3164,8 @@ MonoBehaviour:
     enemyStopDist: 3
     shootInterval: 0.8
     enemyMaxHealth: 800
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   - level: 9
     enemyTypeToSpawn: 2
     maxEnemy: 200
@@ -3157,10 +3175,17 @@ MonoBehaviour:
     enemyStopDist: 2
     shootInterval: 0.7
     enemyMaxHealth: 1000
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
   spawnPositionsParent: {fileID: 2059009830}
   telePortParticle: {fileID: 141433446842962268, guid: 9fe8f8b3288e45a44af36ff8aa04486e, type: 3}
   playerCollidParticle: {fileID: 1429954232896169632, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}
   bulletHitParticle: {fileID: 4553287630450876387, guid: 15483e51212e3d74886ea57291f4639a, type: 3}
+  destructionParticles:
+  - {fileID: 2433282508523890284, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
+  - {fileID: 725748389856807712, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+  - {fileID: 8194992990867289333, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
+  - {fileID: 8791802859067835849, guid: ae07f2a45f14a82428409cfe410e6002, type: 3}
   EnemyPrefabs:
   - enemyType: 0
     prefabs:
@@ -3200,6 +3225,8 @@ MonoBehaviour:
     enemyStopDist: 0
     shootInterval: 0
     enemyMaxHealth: 0
+    isBossFight: 0
+    bossPrefab: {fileID: 0}
 --- !u!1 &1774671773
 GameObject:
   m_ObjectHideFlags: 0
