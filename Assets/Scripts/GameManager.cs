@@ -17,10 +17,13 @@ public class Wave
     public float bulletDamage;
     public float enemyMoveSpeed;
     public float enemyStopDist;
+    public float enemyShootStartDistance = 5f;
     public float shootInterval;
     public float enemyMaxHealth;
+    public int maxCurr = 5;
+    public int minCurr = 2;
     public bool isBossFight;
-    [ShowIf("isBossFight"), AllowNesting] public GameObject bossPrefab;
+    [ShowIf("isBossFight"), AllowNesting] public List<GameObject> bossPrefabs;
 }
 
 [System.Serializable]
@@ -38,6 +41,8 @@ public class GameManager : MonoBehaviour
     public float bulletShootSpeed = 50f;
     public bool isPaused = false;
 
+    public float enemyDamMul = 1.2f;
+
     [Header("Wave")]
     public float waveInterval;
     public List<Wave> waves;
@@ -54,7 +59,13 @@ public class GameManager : MonoBehaviour
     public List<EnemyPrefabs> EnemyPrefabs;
     public Image waveBar;
     public TextMeshProUGUI waveText;
+    [Header("Currency")]
+    public GameObject currPref;
+    public Transform currTargetLoc;
+    Vector3 currencyTargetLocation;
+    public TextMeshProUGUI currencyText;
 
+    [ReadOnly] public int currencyAmount = 0;
     int killLeft;
 
     int waveNumber = 0;
@@ -69,11 +80,67 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        bossWaveTextSeq = DOTween.Sequence();
+        SetCurrency();
         StartCoroutine(WaveManager());
     }
 
 
-    Sequence bossWaveTextSeq = DOTween.Sequence();
+    public void GiveCurrency(Vector3 position)
+    {
+        int iteration = Random.Range(currentWave.minCurr, currentWave.maxCurr);
+        for (int i = 0; i < iteration; i++)
+        {
+            var cur = Instantiate(currPref);
+            position.x += Random.Range(-0.5f, 0.5f);
+            position.y += Random.Range(-0.5f, 0.5f);
+            cur.transform.position = position;
+            
+            // Random direction for initial movement
+            Vector3 randomDirection = new Vector3(
+                Random.Range(-1f, 1f),
+                Random.Range(-1f, 1f),
+                0
+            ).normalized;
+            
+            // Initial position after random movement
+            Vector3 initialTargetPos = position + randomDirection * 2f;
+            
+            // First move to random direction
+            cur.transform.DOMove(initialTargetPos, 0.3f).SetEase(Ease.OutQuad)
+            .OnComplete(() => {
+                // Then move to player
+                currencyTargetLocation = Player.Instance.transform.position;
+                cur.transform.DOMove(currencyTargetLocation, 0.3f).SetEase(Ease.InQuad)
+                .OnUpdate(() => {
+                    currencyTargetLocation = Player.Instance.transform.position;
+                })
+                .OnComplete(() => {
+                    currencyAmount++;
+                    SetCurrency();
+                    Destroy(cur.gameObject);
+                });
+            });
+            
+            cur.transform.DOScale(0, 1f).OnUpdate(() =>
+            {
+                if (cur == null)
+                {
+                    DOTween.Kill(cur.transform);
+                }
+            });
+        }
+    }
+
+    void SetCurrency()
+    {
+        currencyText.text = $" x {currencyAmount}";
+    }
+
+
+
+
+    Sequence bossWaveTextSeq;
     void SetWaveBar(bool isBossLevelText = false)
     {
         float e = (float)killsTotal / (float)currentWave.maxEnemy;
@@ -99,7 +166,7 @@ public class GameManager : MonoBehaviour
     void SetWaveTextFieldAnimation()
     {
         if (bossWaveTextSeq != null) bossWaveTextSeq.Kill();
-        
+
         bossWaveTextSeq = DOTween.Sequence()
             .Append(waveText.gameObject.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f).SetEase(Ease.OutQuad))
             .Append(waveText.gameObject.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InQuad))
@@ -160,27 +227,31 @@ public class GameManager : MonoBehaviour
                     // Check if we can spawn more enemies
                     if (enemies.Count < currentWave.maxENemiesAtATime)
                     {
-                        // Find a random spawn position
-                        Transform spawnPos = spawnPositionsParent.GetChild(Random.Range(0, spawnPositionsParent.childCount));
-                        //var itemList = EnemyPrefabs.Where(x => x.enemyType.Equals(currentWave.enemyTypeToSpawn)).FirstOrDefault();
-                        if (currentWave.bossPrefab != null)
+                        for (int i = 0; i < currentWave.bossPrefabs.Count; i++)
                         {
-                            GameObject enemy = Instantiate(currentWave.bossPrefab, spawnPos.position, Quaternion.identity);
-                            enemies.Add(enemy);
-
-                            // Setup enemy properties based on wave
-                            IEnemy enemyScript = enemy.GetComponent<IEnemy>();
-                            if (enemyScript != null)
+                            // Find a random spawn position
+                            Transform spawnPos = spawnPositionsParent.GetChild(Random.Range(0, spawnPositionsParent.childCount));
+                            //var itemList = EnemyPrefabs.Where(x => x.enemyType.Equals(currentWave.enemyTypeToSpawn)).FirstOrDefault();
+                            if (currentWave.bossPrefabs[i] != null)
                             {
-                                enemyScript.SetMaxHealth(currentWave.enemyMaxHealth);
-                                enemyScript.SetMoveSpeed(currentWave.enemyMoveSpeed);
-                                enemyScript.SetShootInterval(currentWave.shootInterval);
-                                enemyScript.SetStopDistance(currentWave.enemyStopDist);
+                                GameObject enemy = Instantiate(currentWave.bossPrefabs[i], spawnPos.position, Quaternion.identity);
+                                enemies.Add(enemy);
 
+                                // Setup enemy properties based on wave
+                                IEnemy enemyScript = enemy.GetComponent<IEnemy>();
+                                if (enemyScript != null)
+                                {
+                                    enemyScript.SetMaxHealth(currentWave.enemyMaxHealth);
+                                    enemyScript.SetMoveSpeed(currentWave.enemyMoveSpeed);
+                                    enemyScript.SetShootInterval(currentWave.shootInterval);
+                                    enemyScript.SetStopDistance(currentWave.enemyStopDist);
+
+                                }
+
+                                killLeft--;
                             }
-
-                            killLeft--;
                         }
+
                     }
 
                     // Wait before next spawn

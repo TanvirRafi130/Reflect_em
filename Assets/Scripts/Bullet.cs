@@ -70,7 +70,7 @@ public class Bullet : MonoBehaviour
             part.transform.position = this.transform.position;
             part.Play();
             Destroy(part.gameObject, 1f);
-            enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * 5f, this.transform.position);
+            enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * GameManager.Instance.enemyDamMul, this.transform.position);
             Destroy(this.gameObject);
         }
 

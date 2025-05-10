@@ -14,7 +14,7 @@ public enum EnemyType
 public class Enemy : MonoBehaviour, IEnemy
 {
 
-
+    public GameObject enemyObject => this.gameObject;
     [SerializeField] private EnemyType enemyType;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] public float moveSpeed = 3f;
@@ -98,7 +98,7 @@ public class Enemy : MonoBehaviour, IEnemy
             // Stop moving when close enough
             rb.linearVelocity = Vector2.zero;
         }
-        if (distanceToPlayer < stopDistance * 1.25f)
+        if (distanceToPlayer < GameManager.Instance.currentWave.enemyShootStartDistance)
         {
 
             if (!isShooting)
@@ -110,6 +110,9 @@ public class Enemy : MonoBehaviour, IEnemy
 
     }
     bool isShooting = false;
+
+
+
     void StartShootAnimation()
     {
         if (isShooting) return;
@@ -169,7 +172,7 @@ public class Enemy : MonoBehaviour, IEnemy
             {
                 transform.DOScale(0, 0.1f).SetEase(Ease.Flash)
                 .OnComplete(() =>
-                {
+                {   GameManager.Instance.GiveCurrency(this.transform.position);
                     var part = Instantiate(GameManager.Instance.destructionParticles[Random.Range(0, GameManager.Instance.destructionParticles.Count - 1)]);
                     part.transform.position = this.transform.position;
                     part.Play();

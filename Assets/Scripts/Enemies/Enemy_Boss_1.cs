@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Enemy_Boss_1 : MonoBehaviour, IEnemy
 {
 
-
+    public GameObject enemyObject => this.gameObject;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] public float moveSpeed = 3f;
     [SerializeField] public float stopDistance = 2f;
@@ -20,6 +20,7 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
     Color myColor;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    Vector3 originalScale;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,7 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
         spriteRenderer = GetComponent<SpriteRenderer>();
         myBullet = GameManager.Instance.bullets[Random.Range(0, GameManager.Instance.bullets.Count - 1)];
         myColor = GameManager.Instance.colors[Random.Range(0, GameManager.Instance.colors.Count - 1)];
+        originalScale = this.transform.localScale;
 
 
 
@@ -61,7 +63,7 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
         if (distanceToPlayer > stopDistance)
         {
 
-            transform.DOScale(Vector2.one, 0.5f);
+            transform.DOScale(originalScale, 0.5f);
             // Move towards player
             Vector2 moveDirection = direction.normalized;
             if (distanceToPlayer > 25f)
@@ -87,7 +89,7 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
             // Stop moving when close enough
             rb.linearVelocity = Vector2.zero;
         }
-        if (distanceToPlayer < stopDistance * 1.25f)
+        if (distanceToPlayer < GameManager.Instance.currentWave.enemyShootStartDistance)
         {
 
             if (!isShooting)
@@ -103,40 +105,19 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
     {
         if (isShooting) return;
         isShooting = true;
-    /*     switch (enemyType)
+        for (int i = 0; i < shootingPosition.Count; i++)
         {
-            case EnemyType.OneWayShoot:
-                var bullet = Instantiate(myBullet);
-                bullet.transform.position = shootingPosition[0].position;
-                bullet.GetComponent<Bullet>().Shoot(Player.Instance.transform.position - shootingPosition[0].position, myColor);
-                transform.DOPunchScale(new Vector2(0.5f, 0.5f), shootInterval, 0, 0).OnComplete(() =>
-                {
-                    isShooting = false;
-                });
-                break;
+            var bullet2 = Instantiate(myBullet);
+            bullet2.transform.position = shootingPosition[i].position;
+            Vector2 shootDirection = (shootingPosition[i].position - transform.position).normalized;
+            bullet2.GetComponent<Bullet>().Shoot(shootDirection, myColor);
 
-            case EnemyType.circular:
-                for (int i = 0; i < shootingPosition.Count; i++)
-                {
-                    var bullet2 = Instantiate(myBullet);
-                    bullet2.transform.position = shootingPosition[i].position;
-                    Vector2 shootDirection = (shootingPosition[i].position - transform.position).normalized;
-                    bullet2.GetComponent<Bullet>().Shoot(shootDirection, myColor);
-                    transform.DOPunchScale(new Vector2(0.5f, 0.5f), shootInterval, 0, 0).
-
-                        OnComplete(() =>
-                        {
-                            isShooting = false;
-                        });
-                }
-
-                break;
-
-
-
-        } */
-
-
+        }
+        transform.DOPunchScale(originalScale / 1.1f, shootInterval, 0, 0).
+       OnComplete(() =>
+       {
+           isShooting = false;
+       });
 
     }
 
@@ -178,16 +159,16 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
 
     public void SetStopDistance(float distance)
     {
-        throw new System.NotImplementedException();
+        stopDistance = distance;
     }
 
     public void SetShootInterval(float interval)
     {
-        throw new System.NotImplementedException();
+        shootInterval = interval;
     }
 
     public void SetMoveSpeed(float speed)
     {
-        throw new System.NotImplementedException();
+        moveSpeed = speed;
     }
 }

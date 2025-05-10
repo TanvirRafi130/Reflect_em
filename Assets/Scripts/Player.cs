@@ -31,7 +31,7 @@ public class Player : MonoBehaviour, IPlayer
     public GameObject cam;
     public Color damageBgCol;
     private BoxCollider2D boxCollider;
-
+    public float shieldRechargeSpeedMulti = 10000f;
 
 
     private void Awake()
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour, IPlayer
     {
 
         elapsedShieldTime = Mathf.Min(elapsedShieldTime, maxShieldTime); // সর্বাধিক সময়ের চেয়ে বেশি হলে সেটিকে সর্বাধিক সময়ের সমান করুন
-        shieldBarSeconds.text = $"{elapsedShieldTime:F2} / {maxShieldTime:F2}"; // দুই দশমিক স্থানে রূপান্তর
+                                                                         //  shieldBarSeconds.text = $"{elapsedShieldTime:F2} / {maxShieldTime:F2}"; // দুই দশমিক স্থানে রূপান্তর
 
     }
 
@@ -105,7 +105,7 @@ public class Player : MonoBehaviour, IPlayer
                 {
                     shieldParticle.Stop();
                 }
-                elapsedShieldTime += Time.deltaTime * 0.5f; // শিল্ড রিচার্জ হবে আস্তে আস্তে
+                elapsedShieldTime += Time.deltaTime * shieldRechargeSpeedMulti; // শিল্ড রিচার্জ হবে আস্তে আস্তে
                 shieldBarImage.fillAmount = elapsedShieldTime / maxShieldTime;
                 SetShieldTimer();
             }
@@ -132,6 +132,13 @@ public class Player : MonoBehaviour, IPlayer
         // স্পেস প্রেসে টেলিপোর্ট
         if (Input.GetKeyDown(KeyCode.Space) && movement.sqrMagnitude > 0.01f)
         {
+            float amount = elapsedShieldTime < maxShieldTime ? 0.01f : 0f;
+            if (elapsedShieldTime + amount <= maxShieldTime && !isShieldOn)
+            {
+                elapsedShieldTime+=amount;
+                shieldBarImage.fillAmount = elapsedShieldTime / maxShieldTime;
+            }
+
             TeleportInDirection();
         }
     }
@@ -204,7 +211,8 @@ public class Player : MonoBehaviour, IPlayer
             rb.position = rb.position + movement * teleportDistance;
         });
         teleportSeq.AppendInterval(teleportHideTime * 0.5f); // অল্প সময় অদৃশ্য
-        teleportSeq.AppendCallback(() => {
+        teleportSeq.AppendCallback(() =>
+        {
             boxCollider.enabled = true;
         });
         teleportSeq.Append(spriteRenderer.DOFade(1f, 0.09f)); // fade in
@@ -261,7 +269,7 @@ public class Player : MonoBehaviour, IPlayer
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+        if (collision.gameObject.TryGetComponent<IEnemy>(out IEnemy enemy))
         {
             if (!isShieldOn)
             {
@@ -269,7 +277,7 @@ public class Player : MonoBehaviour, IPlayer
                 part.transform.position = this.transform.position;
                 part.Play();
                 Destroy(part.gameObject, 2f);
-                var d = (transform.position - enemy.transform.position).normalized;
+                var d = (transform.position - enemy.enemyObject.transform.position).normalized;
                 transform.position += d * 0.8f;
                 ShakeEffect();
                 health -= 10f;
@@ -283,7 +291,7 @@ public class Player : MonoBehaviour, IPlayer
     }
     void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+        if (collision.gameObject.TryGetComponent<IEnemy>(out IEnemy enemy))
         {
             if (!isShieldOn)
             {
@@ -291,7 +299,7 @@ public class Player : MonoBehaviour, IPlayer
                 part.transform.position = this.transform.position;
                 part.Play();
                 Destroy(part.gameObject, 2f);
-                var d = (transform.position - enemy.transform.position).normalized;
+                var d = (transform.position - enemy.enemyObject.transform.position).normalized;
                 transform.position += d * 0.8f;
                 ShakeEffect();
                 health -= 10f;

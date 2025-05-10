@@ -5,6 +5,7 @@ using UnityEngine;
 
 public interface IEnemy
 {
+    public GameObject enemyObject { get; }
     public void Hurt(float damage, Vector3 dir);
     public void SetMaxHealth(float givenHealth);
     public void SetStopDistance(float distance);
@@ -13,7 +14,7 @@ public interface IEnemy
 }
 public interface IPlayer
 {
-    bool IsShieldOn{get;}
+    bool IsShieldOn { get; }
     public void Hurt(float damage, Vector3 dir);
 
 }
