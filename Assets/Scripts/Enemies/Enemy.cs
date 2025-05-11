@@ -155,24 +155,26 @@ public class Enemy : MonoBehaviour, IEnemy
     }
 
 
-    public void Hurt(float damage, Vector3 dir)
+    public void Hurt(float damage, Vector3 dir, Vector2 damTexPos)
     {
         if (health <= 0) return;
         health -= damage;
         var d = (transform.position - dir).normalized;
         transform.position += d * 0.3f;
-        WorldCanvas.Instance.ShowDamageText(this.transform.position, damage);
+        WorldCanvas.Instance.ShowDamageText(damTexPos, damage, Color.green);
 
         SetHealth();
         if (health <= 0)
         {
+            GameManager.Instance.GiveCurrency(this.transform.position);
             Finish();
             transform.DOPunchScale(transform.localScale * Random.Range(1.1f, 1.5f), 0.1f, 2, 0.5f).SetEase(Ease.OutQuart)
             .OnComplete(() =>
             {
                 transform.DOScale(0, 0.1f).SetEase(Ease.Flash)
                 .OnComplete(() =>
-                {   GameManager.Instance.GiveCurrency(this.transform.position);
+                {
+
                     var part = Instantiate(GameManager.Instance.destructionParticles[Random.Range(0, GameManager.Instance.destructionParticles.Count - 1)]);
                     part.transform.position = this.transform.position;
                     part.Play();

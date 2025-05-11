@@ -6,7 +6,7 @@ using UnityEngine;
 public interface IEnemy
 {
     public GameObject enemyObject { get; }
-    public void Hurt(float damage, Vector3 dir);
+    public void Hurt(float damage, Vector3 dir, Vector2 damTexPos);
     public void SetMaxHealth(float givenHealth);
     public void SetStopDistance(float distance);
     public void SetShootInterval(float interval);

@@ -21,8 +21,8 @@ public class Player : MonoBehaviour, IPlayer
     public float teleportDistance = 1.5f; // টেলিপোর্ট কতদূর যাবে
     public float teleportHideTime = 0.15f; // কতক্ষণ অদৃশ্য থাকবে
     public bool isShieldOn = false;
-    public float health;
-    float maxHealth = 500;
+    float health;
+    public float maxHealth = 500;
     public float maxShieldTime = 5f;
     public ParticleSystem shieldParticle;
     public Image shieldBarImage;
@@ -31,7 +31,7 @@ public class Player : MonoBehaviour, IPlayer
     public GameObject cam;
     public Color damageBgCol;
     private BoxCollider2D boxCollider;
-    public float shieldRechargeSpeedMulti = 10000f;
+    public float shieldRechargeSpeedMulti = 0.5f;
 
 
     private void Awake()
@@ -55,9 +55,24 @@ public class Player : MonoBehaviour, IPlayer
 
     void SetHealth()
     {
-        healthBar.fillAmount = health / maxHealth;
+        healthBar.DOFillAmount(health / maxHealth, 0.1f).SetEase(Ease.Flash);
     }
+    public void IncreasePlayerHealthWithCurrency(float increaseValue)
+    {
+        maxHealth += increaseValue;
+        health += increaseValue;
+        SetHealth();
 
+    }
+    public void IncreasePlayerShieldSpeedWithCurrency(float increaseValue)
+    {
+        shieldRechargeSpeedMulti += increaseValue;
+    }
+    public void GivePlayerMaxHealth()
+    {
+        health = maxHealth;
+        SetHealth();
+    }
     void SetShieldTimer()
     {
 
@@ -135,7 +150,7 @@ public class Player : MonoBehaviour, IPlayer
             float amount = elapsedShieldTime < maxShieldTime ? 0.01f : 0f;
             if (elapsedShieldTime + amount <= maxShieldTime && !isShieldOn)
             {
-                elapsedShieldTime+=amount;
+                elapsedShieldTime += amount;
                 shieldBarImage.fillAmount = elapsedShieldTime / maxShieldTime;
             }
 
@@ -244,7 +259,7 @@ public class Player : MonoBehaviour, IPlayer
         transform.position += d * 0.3f;
         SetHealth();
         ShakeCamera(); // ক্যামেরা শেক যোগ করা হয়েছে
-        WorldCanvas.Instance.ShowDamageText(this.transform.position, damage);
+        WorldCanvas.Instance.ShowDamageText(this.transform.position, damage, Color.red);
         if (health <= 0)
         {
             transform.DOPunchScale(transform.localScale * Random.Range(1.1f, 1.5f), 0.1f, 2, 0.5f).SetEase(Ease.OutQuart)
@@ -285,7 +300,7 @@ public class Player : MonoBehaviour, IPlayer
             }
             else
             {
-                enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * 5f, this.transform.position);
+                enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * GameManager.Instance.enemyDamMul, this.transform.position, collision.transform.position);
             }
         }
     }
@@ -307,7 +322,7 @@ public class Player : MonoBehaviour, IPlayer
             }
             else
             {
-                enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * 5f, this.transform.position);
+                enemy.Hurt(GameManager.Instance.currentWave.bulletDamage * GameManager.Instance.enemyDamMul, this.transform.position, collision.transform.position);
             }
         }
     }

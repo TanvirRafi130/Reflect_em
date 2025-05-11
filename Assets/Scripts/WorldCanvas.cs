@@ -17,15 +17,16 @@ public class WorldCanvas : MonoBehaviour
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void ShowDamageText(Vector2 pos, float damageValue)
+    public void ShowDamageText(Vector2 pos, float damageValue,Color col)
     {
+
         var obj = Instantiate(textObject, this.transform.position, Quaternion.identity);
         obj.transform.parent = this.transform;
         obj.transform.localScale = Vector3.zero;
         obj.transform.position = pos;
         var textComp = obj.GetComponent<TextMeshProUGUI>();
         textComp.text = $"-{damageValue}";
-        textComp.color = Color.red;
+        textComp.color = col;
         // Create sequence for floating up and scaling
         Sequence sequence = DOTween.Sequence();
         sequence.Append(obj.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack));

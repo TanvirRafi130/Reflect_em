@@ -89,39 +89,44 @@ public class GameManager : MonoBehaviour
     public void GiveCurrency(Vector3 position)
     {
         int iteration = Random.Range(currentWave.minCurr, currentWave.maxCurr);
+        currencyAmount += iteration;
+        SetCurrency();
+        if(iteration>50) iteration = 50;
         for (int i = 0; i < iteration; i++)
         {
             var cur = Instantiate(currPref);
             position.x += Random.Range(-0.5f, 0.5f);
             position.y += Random.Range(-0.5f, 0.5f);
             cur.transform.position = position;
-            
+
             // Random direction for initial movement
             Vector3 randomDirection = new Vector3(
                 Random.Range(-1f, 1f),
                 Random.Range(-1f, 1f),
                 0
             ).normalized;
-            
+
             // Initial position after random movement
             Vector3 initialTargetPos = position + randomDirection * 2f;
-            
+
             // First move to random direction
             cur.transform.DOMove(initialTargetPos, 0.3f).SetEase(Ease.OutQuad)
-            .OnComplete(() => {
+            .OnComplete(() =>
+            {
                 // Then move to player
                 currencyTargetLocation = Player.Instance.transform.position;
                 cur.transform.DOMove(currencyTargetLocation, 0.3f).SetEase(Ease.InQuad)
-                .OnUpdate(() => {
+                .OnUpdate(() =>
+                {
                     currencyTargetLocation = Player.Instance.transform.position;
                 })
-                .OnComplete(() => {
-                    currencyAmount++;
-                    SetCurrency();
+                .OnComplete(() =>
+                {
+                    // currencyAmount++;
                     Destroy(cur.gameObject);
                 });
             });
-            
+
             cur.transform.DOScale(0, 1f).OnUpdate(() =>
             {
                 if (cur == null)
@@ -135,6 +140,13 @@ public class GameManager : MonoBehaviour
     void SetCurrency()
     {
         currencyText.text = $" x {currencyAmount}";
+    }
+
+    public void RemoveCurrency(int amount)
+    {
+        currencyAmount -= amount;
+        SetCurrency();
+
     }
 
 
@@ -172,10 +184,20 @@ public class GameManager : MonoBehaviour
             .Append(waveText.gameObject.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InQuad))
             .SetLoops(-1); // Infinite loop
     }
+    public bool isShopOn = false;
     IEnumerator WaveManager()
     {
         while (waveNumber < waves.Count)
         {
+            if (waveNumber != 0)
+            {
+                ShopManager.Instance.OpenShop();
+                isShopOn = true;
+            }
+            while (isShopOn)
+            {
+                yield return null;
+            }
             currentWave = waves[waveNumber];
             killLeft = currentWave.maxEnemy;
             killsTotal = 0;
@@ -221,6 +243,7 @@ public class GameManager : MonoBehaviour
             }
             else //boss fights
             {
+                Player.Instance.GivePlayerMaxHealth();
                 // Spawn enemies for current wave
                 while (killLeft > 0)
                 {
