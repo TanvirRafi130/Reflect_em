@@ -155,16 +155,16 @@ MonoBehaviour:
   - {fileID: 760115530}
   shopCloseButton: {fileID: 1336461709}
   healthPrice: 50
-  healthIncreaseBy: 300
+  healthIncreaseBy: 50
   healthPriceIncrease: 30
   priceTextHealth: {fileID: 251407737}
   healthBuyButton: {fileID: 1044612767}
-  fullHealthPrice: 2500
+  fullHealthPrice: 1500
   fullHealthPriceIncrease: 500
   priceTextFullealth: {fileID: 563603037}
   fullHealthBuyButton: {fileID: 1948427108}
   shieldRechargePrice: 30
-  shieldRechareSpeedIncreaseBy: 0.2
+  shieldRechareSpeedIncreaseBy: 0.02
   shieldRechargePriceIncrease: 30
   priceTextShield: {fileID: 98522591}
   shieldBuyButton: {fileID: 1472919916}
@@ -1345,7 +1345,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 20% Shield Refill Speed ++
+  m_text: 2% Shield Refill Speed ++
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
   m_sharedMaterial: {fileID: 6584673133508730501, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
@@ -2096,7 +2096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &371612041
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2796,9 +2796,9 @@ RectTransform:
   - {fileID: 131193599}
   m_Father: {fileID: 1381749648}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1000, y: 480}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 495}
   m_SizeDelta: {x: 480, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &544946624
@@ -6422,7 +6422,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 60% Max Health++
+  m_text: 5% Max Health++
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
   m_sharedMaterial: {fileID: 6584673133508730501, guid: 7aaed198d1e0a034185b1a9708dd7a0b, type: 2}
@@ -6990,8 +6990,39 @@ MonoBehaviour:
   bulletShootSpeed: 30
   isPaused: 0
   enemyDamMul: 1.2
-  waveInterval: 5
+  waveInterval: 1
   waves:
+  - level: 9
+    enemyTypeToSpawn: 2
+    maxEnemy: 2
+    maxENemiesAtATime: 2
+    bulletDamage: 50
+    enemyMoveSpeed: 14
+    enemyStopDist: 2
+    enemyShootStartDistance: 30
+    shootInterval: 0.3
+    enemyMaxHealth: 300000
+    maxCurr: 0
+    minCurr: 0
+    isBossFight: 1
+    bossPrefabs:
+    - {fileID: 4721825707209455232, guid: 9c25c7264c1381249ba8321851c1cde8, type: 3}
+    - {fileID: 3026487793858918923, guid: 253d8fddefd37524794c153126dd2ba3, type: 3}
+  - level: 4
+    enemyTypeToSpawn: 1
+    maxEnemy: 1
+    maxENemiesAtATime: 1
+    bulletDamage: 25
+    enemyMoveSpeed: 9
+    enemyStopDist: 2
+    enemyShootStartDistance: 15
+    shootInterval: 0.2
+    enemyMaxHealth: 50000
+    maxCurr: 1500
+    minCurr: 1500
+    isBossFight: 1
+    bossPrefabs:
+    - {fileID: 4721825707209455232, guid: 9c25c7264c1381249ba8321851c1cde8, type: 3}
   - level: 0
     enemyTypeToSpawn: 0
     maxEnemy: 10
@@ -7050,21 +7081,6 @@ MonoBehaviour:
     minCurr: 10
     isBossFight: 0
     bossPrefabs: []
-  - level: 4
-    enemyTypeToSpawn: 1
-    maxEnemy: 1
-    maxENemiesAtATime: 1
-    bulletDamage: 25
-    enemyMoveSpeed: 9
-    enemyStopDist: 2
-    enemyShootStartDistance: 8
-    shootInterval: 0.2
-    enemyMaxHealth: 50000
-    maxCurr: 1000
-    minCurr: 1000
-    isBossFight: 1
-    bossPrefabs:
-    - {fileID: 4721825707209455232, guid: 9c25c7264c1381249ba8321851c1cde8, type: 3}
   - level: 5
     enemyTypeToSpawn: 1
     maxEnemy: 80
@@ -7117,26 +7133,10 @@ MonoBehaviour:
     enemyShootStartDistance: 10
     shootInterval: 0.8
     enemyMaxHealth: 250
-    maxCurr: 1000
-    minCurr: 800
+    maxCurr: 150
+    minCurr: 100
     isBossFight: 0
     bossPrefabs: []
-  - level: 9
-    enemyTypeToSpawn: 2
-    maxEnemy: 2
-    maxENemiesAtATime: 2
-    bulletDamage: 50
-    enemyMoveSpeed: 14
-    enemyStopDist: 2
-    enemyShootStartDistance: 10
-    shootInterval: 0.3
-    enemyMaxHealth: 50000
-    maxCurr: 0
-    minCurr: 0
-    isBossFight: 1
-    bossPrefabs:
-    - {fileID: 4721825707209455232, guid: 9c25c7264c1381249ba8321851c1cde8, type: 3}
-    - {fileID: 3026487793858918923, guid: 253d8fddefd37524794c153126dd2ba3, type: 3}
   spawnPositionsParent: {fileID: 2059009830}
   telePortParticle: {fileID: 141433446842962268, guid: 9fe8f8b3288e45a44af36ff8aa04486e, type: 3}
   playerCollidParticle: {fileID: 1429954232896169632, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}
@@ -7327,7 +7327,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -171, y: -730}
+  m_AnchoredPosition: {x: -150, y: -730}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1855028494
@@ -7734,7 +7734,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1947489695}
   m_OnClick:
     m_PersistentCalls:
@@ -7752,7 +7752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
