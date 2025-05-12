@@ -128,7 +128,8 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
         health -= damage;
         var d = (transform.position - dir).normalized;
         transform.position += d * 0.3f;
-        WorldCanvas.Instance.ShowDamageText(damTexPos, damage, Color.green);
+        WorldCanvas.Instance.ShowDamageText(damTexPos, damage, Color.black);
+        AudioManager.Instance.PlayHittingSound();
 
         SetHealth();
         if (health <= 0)
@@ -141,6 +142,11 @@ public class Enemy_Boss_1 : MonoBehaviour, IEnemy
                 transform.DOScale(0, 0.1f).SetEase(Ease.Flash)
                 .OnComplete(() =>
                 {
+
+                    var part = Instantiate(GameManager.Instance.destructionParticles[Random.Range(0, GameManager.Instance.destructionParticles.Count - 1)]);
+                    part.transform.position = this.transform.position;
+                    part.Play();
+                    Destroy(part.gameObject, 5f);
                     Destroy(this.gameObject);
                 })
                 ;

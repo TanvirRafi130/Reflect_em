@@ -20,8 +20,7 @@ public class WorldCanvas : MonoBehaviour
     public void ShowDamageText(Vector2 pos, float damageValue,Color col)
     {
 
-        var obj = Instantiate(textObject, this.transform.position, Quaternion.identity);
-        obj.transform.parent = this.transform;
+        var obj = Instantiate(textObject, this.transform.position, Quaternion.identity,this.transform);
         obj.transform.localScale = Vector3.zero;
         obj.transform.position = pos;
         var textComp = obj.GetComponent<TextMeshProUGUI>();

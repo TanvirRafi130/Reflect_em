@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null) instance = this;
         enemies = new List<GameObject>();
+        Application.targetFrameRate = 60;
     }
 
     private void Start()
@@ -91,7 +92,7 @@ public class GameManager : MonoBehaviour
         int iteration = Random.Range(currentWave.minCurr, currentWave.maxCurr);
         currencyAmount += iteration;
         SetCurrency();
-        if(iteration>50) iteration = 50;
+        if (iteration > 10) iteration = 10;
         for (int i = 0; i < iteration; i++)
         {
             var cur = Instantiate(currPref);
@@ -243,7 +244,9 @@ public class GameManager : MonoBehaviour
             }
             else //boss fights
             {
-                Player.Instance.GivePlayerMaxHealth();
+                //Player.Instance.GivePlayerMaxHealth();
+                AudioManager.Instance.PlayWarningSound();
+
                 // Spawn enemies for current wave
                 while (killLeft > 0)
                 {
@@ -293,7 +296,9 @@ public class GameManager : MonoBehaviour
         }
 
         // All waves completed
-        Debug.Log("All waves completed!");
+        // Debug.Log("All waves completed!");
+        UiManager.Instance.OpenEndScreen("Congratulations!!! You Are The Best #1");
+
     }
 
     public void OnEnemyDeath(GameObject enemy)

@@ -26,6 +26,7 @@ public class Bullet : MonoBehaviour
 
         // Shoot the bullet in the specified direction with given speed
         rigidbody2D.linearVelocity = dir.normalized * GameManager.Instance.bulletShootSpeed;
+        AudioManager.Instance.PlayShootingSound();
          Destroy(this.gameObject, 2.5f);
     }
 
@@ -50,6 +51,7 @@ public class Bullet : MonoBehaviour
                 // Reflect the direction
                 Vector2 reflectedDirection = transform.position - Player.Instance.transform.position;
                 rigidbody2D.linearVelocity = reflectedDirection.normalized * GameManager.Instance.bulletShootSpeed;
+                AudioManager.Instance.PlayShootingSound();
 
             }
             else

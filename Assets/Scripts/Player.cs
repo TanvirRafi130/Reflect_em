@@ -81,6 +81,16 @@ public class Player : MonoBehaviour, IPlayer
 
     }
 
+    public void TurnOffShieldForceFully()
+    {
+        isShieldOn = false;
+        if (shieldParticle.isPlaying)
+        {
+            shieldParticle.Stop();
+        }
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -209,6 +219,7 @@ public class Player : MonoBehaviour, IPlayer
 
     void TeleportInDirection()
     {
+        AudioManager.Instance.PlayTelepostSound();
         var teliParticle = Instantiate(GameManager.Instance.telePortParticle);
         teliParticle.transform.position = this.transform.position;
         teliParticle.Play();
@@ -259,6 +270,7 @@ public class Player : MonoBehaviour, IPlayer
         transform.position += d * 0.3f;
         SetHealth();
         ShakeCamera(); // ক্যামেরা শেক যোগ করা হয়েছে
+        AudioManager.Instance.PlayHittingSound();
         WorldCanvas.Instance.ShowDamageText(this.transform.position, damage, Color.red);
         if (health <= 0)
         {
@@ -271,6 +283,7 @@ public class Player : MonoBehaviour, IPlayer
                      transform.DOScale(0, 0.1f).SetEase(Ease.Flash)
                                    .OnComplete(() =>
                                    {
+                                       UiManager.Instance.OpenEndScreen("Game Over , You Failed!!!");
                                        Destroy(this.gameObject);
                                    })
                                    ;
@@ -296,6 +309,7 @@ public class Player : MonoBehaviour, IPlayer
                 transform.position += d * 0.8f;
                 ShakeEffect();
                 health -= 10f;
+                AudioManager.Instance.PlayHittingSound();
                 SetHealth();
             }
             else
@@ -318,6 +332,7 @@ public class Player : MonoBehaviour, IPlayer
                 transform.position += d * 0.8f;
                 ShakeEffect();
                 health -= 10f;
+                //AudioManager.Instance.PlayHittingSound();
                 SetHealth();
             }
             else

@@ -145,6 +145,22 @@ public class Enemy : MonoBehaviour, IEnemy
                 }
 
                 break;
+            case EnemyType.shootPosMove:
+                for (int i = 0; i < shootingPosition.Count; i++)
+                {
+                    var bullet2 = Instantiate(myBullet);
+                    bullet2.transform.position = shootingPosition[i].position;
+                    Vector2 shootDirection = (shootingPosition[i].position - transform.position).normalized;
+                    bullet2.GetComponent<Bullet>().Shoot(shootDirection, myColor);
+                    transform.DOPunchScale(new Vector2(0.5f, 0.5f), shootInterval, 0, 0).
+
+                        OnComplete(() =>
+                        {
+                            isShooting = false;
+                        });
+                }
+
+                break;
 
 
 
@@ -162,6 +178,7 @@ public class Enemy : MonoBehaviour, IEnemy
         var d = (transform.position - dir).normalized;
         transform.position += d * 0.3f;
         WorldCanvas.Instance.ShowDamageText(damTexPos, damage, Color.green);
+        AudioManager.Instance.PlayHittingSound();
 
         SetHealth();
         if (health <= 0)
